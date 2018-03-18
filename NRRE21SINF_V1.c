@@ -2,12 +2,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-//#include <conio.h>
 
 double voltage (int arr10, int arr11){
 	double v;
 	v = arr10*16*16+arr11;
-	v = (v/4096)*1.5;
+	v = (v/4096)*1.5*0.5;
 	return v;
 }
 	
@@ -39,7 +38,7 @@ double relahumi (int arr18, int arr19){
 	return r;
 }
 
-double humicomp (int arr18, int arr19, int temptfunc, int relahumifunc){
+double humicomp (int arr18, int arr19, double temptfunc, double relahumifunc){
 	double h;
 	h = arr18*16*16+arr19;
 	h = (temptfunc-25)*(0.01+0.00008*h)+relahumifunc;
@@ -50,13 +49,13 @@ int main(){
 	int k;
 	int arr[23] = {0};
 	char *str;
-	char str_in[255]={"7E 45 00 FF FF 00 05 0A 3F 0C 40 44 00 BD 00 BD 1D 3F 02 27 48 81 7E"}; //teste
+	char str_in[255];//={"7E 45 00 FF FF 00 05 0A 3F 0C 40 44 00 BD 00 BD 1D 3F 02 27 48 81 7E"}; //teste
 	double t, h;
 	
 	
 	while(1){
 		k = 0;
-		//fgets(str_in, 255, stdin);
+		fgets(str_in, 255, stdin);
 		str = strtok(str_in, " ");
 		while(str != NULL){
 			arr[k] = strtol(str,NULL,16);
@@ -70,10 +69,21 @@ int main(){
 Visible light: %flux \n Infrared light: %flux \n", t, h, \
 		humicomp(arr[18],arr[19],t,h), voltage(arr[10],arr[11]), vlight(arr[12],arr[13]), \
 		ilight(arr[14],arr[15]));
+		if(h>100 || h<0){
+			printf("Valor da humidade relativa e compensada impossível.\n");
+		}
+		
+		if(t>50 || t<-10){
+			printf("Valor da temperatura impossível.\n");
+		}
+		
+		if(vlight(arr[12],arr[13])<0 || ilight(arr[14],arr[15])){
+			printf("Valor de luminosidade impossível.\n");
+		}
+
 		printf("\n\n");
-		getchar(); //escrever um nº e depois enter para fazer mais um ciclo
+		//getchar(); //escrever um nº e depois enter para fazer mais um ciclo
 	}
 	return 0; 
 }
-
 
