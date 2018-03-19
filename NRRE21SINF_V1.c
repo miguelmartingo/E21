@@ -77,7 +77,7 @@ Visible light: %flux \n Infrared light: %flux \n", t, h, \
 			printf("Valor da temperatura impossível.\n");
 		}
 		
-		if(vlight(arr[12],arr[13])<0 || ilight(arr[14],arr[15])){
+		if(vlight(arr[12],arr[13])<0 || ilight(arr[14],arr[15])<0){
 			printf("Valor de luminosidade impossível.\n");
 		}
 
